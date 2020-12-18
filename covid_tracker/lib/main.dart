@@ -34,6 +34,9 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Covid Tracker'),
+      ),
       body: Center(
         child: Text('COVID TRACKER HOME PAGE'),
       ),
