@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.covid_tracker">
    <application
-        android:label="covid_tracker"
+        android:label="Covid Tracker"
         android:icon="@mipmap/ic_launcher">
+        <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> -->
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDoGD2wMsPC1_rQa55bnH0RTww15tOE354"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
