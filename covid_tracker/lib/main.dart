@@ -2,6 +2,10 @@ import 'package:covid_tracker/providers/CovidLocations.dart';
 import 'package:covid_tracker/providers/MyLocation.dart';
 import 'package:covid_tracker/screens/home.dart';
 import 'package:covid_tracker/screens/notifications.dart';
+import 'package:covid_tracker/styles.dart';
+import 'package:covid_tracker/widgets/android_home.dart';
+import 'package:covid_tracker/widgets/ios_home.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,15 +26,18 @@ class MyApp extends StatelessWidget {
           create: (_) => CovidLocations(),
         ),
       ],
-      child: MaterialApp(
+      child: CupertinoApp(
         debugShowCheckedModeBanner: false,
         title: 'Covid Tracker',
-        theme: ThemeData(
-          primarySwatch: Colors.green,
+        theme: CupertinoThemeData(
+          primaryColor: DarkTheme.primary,
+          barBackgroundColor: DarkTheme.appBar,
+          scaffoldBackgroundColor: DarkTheme.black,
         ),
         home: MyHomePage(title: 'Covid Tracker'),
         routes: {
-          Home.routeName: (ctx) => Home(),
+          IOSHome.routeName: (ctx) => IOSHome(),
+          AndroidHome.routeName: (ctx) => Home(),
           Notifications.routeName: (ctx) => Notifications(),
         },
       ),
@@ -44,16 +51,18 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Covid Tracker'),
-      ),
-      body: FlatButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/home');
-        },
-        child: Center(
-          child: Text('COVID TRACKER HOME PAGE'),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Covid Tracker'),
+        ),
+        body: FlatButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed('/ios_home');
+          },
+          child: Center(
+            child: Text('COVID TRACKER HOME PAGE'),
+          ),
         ),
       ),
     );

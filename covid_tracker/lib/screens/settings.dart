@@ -2,7 +2,7 @@ import 'package:covid_tracker/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CovidUpdates extends StatelessWidget {
+class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -10,7 +10,7 @@ class CovidUpdates extends StatelessWidget {
         child: Container(
           child: Center(
             child: Text(
-              'COVID UPDATES',
+              'SETTINGS',
               style: TextStyle(color: DarkTheme.primaryText),
             ),
           ),
