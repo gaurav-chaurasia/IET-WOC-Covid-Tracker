@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:covid_tracker/providers/CovidLocations.dart';
 import 'package:covid_tracker/providers/MyLocation.dart';
+import 'package:covid_tracker/styles.dart';
+import 'package:covid_tracker/widgets/recenter_floating_action_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -45,8 +47,22 @@ class _CovidMapState extends State<CovidMap>
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: CupertinoPageScaffold(
-        child: _isLoading == true
+      child: Scaffold(
+        backgroundColor: DarkTheme.black,
+        appBar: CupertinoNavigationBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.menu,
+              color: DarkTheme.primary,
+            ),
+            onPressed: () {},
+          ),
+          middle: Text(
+            'Covid Tracker',
+            style: TextStyle(color: DarkTheme.primaryText),
+          ),
+        ),
+        body: _isLoading == true
             ? Center(
                 child: CupertinoActivityIndicator(
                   radius: 25,
@@ -67,17 +83,13 @@ class _CovidMapState extends State<CovidMap>
                     onMapCreated: (GoogleMapController controller) {
                       _controller = controller;
                     },
-                    compassEnabled: true,
-                    indoorViewEnabled: true,
-                    mapToolbarEnabled: true,
                     myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    rotateGesturesEnabled: true,
-                    zoomControlsEnabled: true,
-                    zoomGesturesEnabled: true,
+                    myLocationButtonEnabled: false,
                   );
                 },
               ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: RecenterFloatingActionButton(_controller),
       ),
     );
   }

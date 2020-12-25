@@ -37,8 +37,9 @@ class MyApp extends StatelessWidget {
         home: MyHomePage(title: 'Covid Tracker'),
         routes: {
           IOSHome.routeName: (ctx) => IOSHome(),
-          AndroidHome.routeName: (ctx) => Home(),
+          AndroidHome.routeName: (ctx) => AndroidHome(),
           Notifications.routeName: (ctx) => Notifications(),
+          Home.routeName: (ctx) => Home(),
         },
       ),
     );
@@ -58,7 +59,7 @@ class MyHomePage extends StatelessWidget {
         ),
         body: FlatButton(
           onPressed: () {
-            Navigator.of(context).pushNamed('/ios_home');
+            Navigator.of(context).pushNamed('/home');
           },
           child: Center(
             child: Text('COVID TRACKER HOME PAGE'),

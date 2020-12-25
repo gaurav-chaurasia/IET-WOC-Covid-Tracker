@@ -27,8 +27,13 @@ class _IOSHomeState extends State<IOSHome> {
     return CupertinoTabScaffold(
       resizeToAvoidBottomInset: false,
       controller: _cupertinoTabController,
-
       tabBar: CupertinoTabBar(
+        iconSize: 25,
+        border: Border(
+            top: BorderSide(
+          color: DarkTheme.primary,
+          width: 1,
+        )),
         currentIndex: 1,
         activeColor: DarkTheme.primary,
         backgroundColor: DarkTheme.background,
@@ -37,32 +42,27 @@ class _IOSHomeState extends State<IOSHome> {
           BottomNavigationBarItem(
               icon: Icon(
                 FontAwesome.heartbeat,
-                size: 22,
               ),
               label: "Your Status"),
           BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.map_pin_ellipse,
-                size: 22,
               ),
               label: "Covid Map"),
           BottomNavigationBarItem(
               icon: Icon(
                 FontAwesome.bar_chart,
-                size: 22,
               ),
               label: "Covid Updates"),
           BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.settings,
-                size: 22,
               ),
               label: "Settings"),
         ],
       ),
       tabBuilder: (BuildContext context, int index) {
         return CupertinoTabView(
-          defaultTitle: 'Covid Tracker',
           builder: (BuildContext context) {
             switch (index) {
               case 0:
