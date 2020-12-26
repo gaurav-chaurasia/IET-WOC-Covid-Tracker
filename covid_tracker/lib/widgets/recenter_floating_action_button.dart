@@ -1,5 +1,4 @@
-import 'package:covid_tracker/providers/MyLocation.dart';
-import 'package:covid_tracker/styles.dart';
+import 'package:covid_tracker/providers/my_location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,7 +17,7 @@ class _RecenterFloatingActionButtonState
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   Animation curve;
-  final angle = Tween(begin: 0 / 360, end: 1800 / 360);
+  final angle = Tween(begin: 0 / 360, end: 720 / 360);
   final scaleTween = TweenSequence([
     TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.3), weight: 1),
     TweenSequenceItem(tween: Tween(begin: 1.3, end: 1.0), weight: 1),
@@ -61,15 +60,15 @@ class _RecenterFloatingActionButtonState
               _animationController.reset();
             }
           },
-          child: CircleAvatar(
-            backgroundColor: DarkTheme.primary,
-            radius: 26,
-            child: Center(
-              child: Icon(
-                CupertinoIcons.location_circle,
-                size: 30,
-                color: DarkTheme.white,
-              ),
+          child: Container(
+            width: 60,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black26)]),
+            child: Image.asset(
+              'assets/globe.png',
+              alignment: Alignment.center,
+              fit: BoxFit.fill,
             ),
           ),
         ),

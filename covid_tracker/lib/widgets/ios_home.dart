@@ -30,10 +30,11 @@ class _IOSHomeState extends State<IOSHome> {
       tabBar: CupertinoTabBar(
         iconSize: 25,
         border: Border(
-            top: BorderSide(
-          color: DarkTheme.primary,
-          width: 1,
-        )),
+          top: BorderSide(
+            color: DarkTheme.primary,
+            width: 1,
+          ),
+        ),
         currentIndex: 1,
         activeColor: DarkTheme.primary,
         backgroundColor: DarkTheme.background,

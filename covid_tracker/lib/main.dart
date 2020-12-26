@@ -1,7 +1,8 @@
-import 'package:covid_tracker/providers/CovidLocations.dart';
-import 'package:covid_tracker/providers/MyLocation.dart';
+import 'package:covid_tracker/providers/covid_locations.dart';
+import 'package:covid_tracker/providers/my_location.dart';
 import 'package:covid_tracker/screens/home.dart';
 import 'package:covid_tracker/screens/notifications.dart';
+import 'package:covid_tracker/screens/splash.dart';
 import 'package:covid_tracker/styles.dart';
 import 'package:covid_tracker/widgets/android_home.dart';
 import 'package:covid_tracker/widgets/ios_home.dart';
@@ -34,37 +35,13 @@ class MyApp extends StatelessWidget {
           barBackgroundColor: DarkTheme.appBar,
           scaffoldBackgroundColor: DarkTheme.black,
         ),
-        home: MyHomePage(title: 'Covid Tracker'),
+        home: Splash(),
         routes: {
           IOSHome.routeName: (ctx) => IOSHome(),
           AndroidHome.routeName: (ctx) => AndroidHome(),
           Notifications.routeName: (ctx) => Notifications(),
           Home.routeName: (ctx) => Home(),
         },
-      ),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  final String title;
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Covid Tracker'),
-        ),
-        body: FlatButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/home');
-          },
-          child: Center(
-            child: Text('COVID TRACKER HOME PAGE'),
-          ),
-        ),
       ),
     );
   }

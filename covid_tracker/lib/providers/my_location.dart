@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:covid_tracker/providers/location_services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,22 +26,32 @@ class MyLocation with ChangeNotifier {
     return _circle;
   }
 
-  Future<void> getInitialLocation() async {
-    final permission = await _locationTracker.hasPermission();
+  //to check for location permission status and enable gps
+  Future<bool> _checkLocationPermissionStatus(BuildContext context) async {
     final service = await _locationTracker.serviceEnabled();
-    if (permission == PermissionStatus.denied ||
-        permission == PermissionStatus.deniedForever) {
-      await _locationTracker.requestPermission();
-    }
     if (service == false) {
       await _locationTracker.requestService();
     }
-    var location = await _locationTracker.getLocation();
-    _initialLocation = CameraPosition(
-      target: LatLng(location.latitude, location.longitude),
-      zoom: 14.4746,
-    );
-    notifyListeners();
+    bool permission =
+        await LocationServices().requestLocationPermission(context);
+    return permission;
+  }
+
+  //to get the initial location of the user
+  Future<bool> getInitialLocation(BuildContext context) async {
+    var locationPermission = await _checkLocationPermissionStatus(context);
+    if (locationPermission == false) return false;
+    try {
+      var location = await _locationTracker.getLocation();
+      _initialLocation = CameraPosition(
+        target: LatLng(location.latitude, location.longitude),
+        zoom: 14.4746,
+      );
+      return true;
+    } on PlatformException catch (e) {
+      print("permission denied by getInititalLocation() : " + e.message);
+      return false;
+    }
   }
 
   // Future<Uint8List> getMarker(BuildContext context) async {
@@ -71,34 +83,40 @@ class MyLocation with ChangeNotifier {
   //   notifyListeners();
   // }
 
+  // to get the current location of the user
   Future<void> getCurrentLocation(
       BuildContext context, GoogleMapController _controller) async {
+    var locationPermission = await _checkLocationPermissionStatus(context);
+    if (locationPermission == false) return false;
     try {
       // Uint8List imageData = await getMarker(context);
       // var location = await _locationTracker.getLocation();
       // updateMarkerAndCircle(location, imageData);
+
       if (locationSubscription != null) {
         locationSubscription.cancel();
       }
-      locationSubscription =
-          _locationTracker.onLocationChanged.listen((newLocalData) {
-        if (_controller != null) {
-          _controller.animateCamera(
-            CameraUpdate.newCameraPosition(
-              new CameraPosition(
-                  bearing: 192.8334901395799,
-                  target: LatLng(newLocalData.latitude, newLocalData.longitude),
-                  tilt: 0,
-                  zoom: 17.60),
-            ),
-          );
-          // updateMarkerAndCircle(newLocalData, imageData);
-        }
-      });
+      locationSubscription = _locationTracker.onLocationChanged.listen(
+        (newLocalData) {
+          if (_controller != null) {
+            _controller.animateCamera(
+              CameraUpdate.newCameraPosition(
+                new CameraPosition(
+                    bearing: 192.8334901395799,
+                    target:
+                        LatLng(newLocalData.latitude, newLocalData.longitude),
+                    tilt: 0,
+                    zoom: 17.60),
+              ),
+            );
+            // updateMarkerAndCircle(newLocalData, imageData);
+          }
+        },
+      );
+      return true;
     } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        debugPrint("Permission Denied");
-      }
+      debugPrint("Permission Denied by getCurrentLocation() : " + e.message);
+      return false;
     }
   }
 }
