@@ -29,6 +29,13 @@
             {
               "client_id": "179577014443-l3dl6vd7a6vm2hkfl4kqplkkcrgtu5v6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "179577014443-fp6pd5j72lss69un4t3p4iq9vallst5k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rj.covidtracker"
+              }
             }
           ]
         }

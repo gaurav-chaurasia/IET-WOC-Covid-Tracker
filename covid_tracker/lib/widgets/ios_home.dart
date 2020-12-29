@@ -2,7 +2,7 @@ import 'package:covid_tracker/screens/Settings.dart';
 import 'package:covid_tracker/screens/home_subscreens/covid_map.dart';
 import 'package:covid_tracker/screens/home_subscreens/covid_updates.dart';
 import 'package:covid_tracker/screens/home_subscreens/health_status.dart';
-import 'package:covid_tracker/styles.dart';
+import 'package:covid_tracker/utils/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';

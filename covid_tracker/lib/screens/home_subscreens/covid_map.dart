@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:covid_tracker/providers/covid_locations.dart';
 import 'package:covid_tracker/providers/my_location.dart';
-import 'package:covid_tracker/styles.dart';
+import 'package:covid_tracker/utils/styles.dart';
 import 'package:covid_tracker/widgets/error_refresh_button.dart';
 import 'package:covid_tracker/widgets/recenter_floating_action_button.dart';
 import 'package:flutter/cupertino.dart';

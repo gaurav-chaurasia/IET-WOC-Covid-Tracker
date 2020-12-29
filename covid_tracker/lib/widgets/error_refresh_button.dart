@@ -1,4 +1,4 @@
-import 'package:covid_tracker/styles.dart';
+import 'package:covid_tracker/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class ErrorRefreshButton extends StatelessWidget {
