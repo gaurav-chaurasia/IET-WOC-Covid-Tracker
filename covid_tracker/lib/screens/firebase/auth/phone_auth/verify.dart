@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid_tracker/screens/home.dart';
 import 'package:covid_tracker/utils/styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +37,18 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    focusNode1.dispose();
+    focusNode2.dispose();
+    focusNode3.dispose();
+    focusNode4.dispose();
+    focusNode5.dispose();
+    focusNode6.dispose();
+    super.dispose();
   }
 
   final scaffoldKey =
@@ -288,9 +301,14 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   onVerified() async {
     _showSnackBar(
         "${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
-    await Future.delayed(Duration(seconds: 1));
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => CupertinoApp(home: Home())));
+    final String phone =
+        await Provider.of<PhoneAuthDataProvider>(context, listen: false).phone;
+    await FirebaseFirestore.instance.collection('users').doc(phone).set(
+      {
+        'status': 'negative',
+      },
+    ).then((_) => Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (BuildContext context) => CupertinoApp(home: Home()))));
   }
 
   onFailed() {

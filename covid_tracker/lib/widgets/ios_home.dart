@@ -16,11 +16,11 @@ class IOSHome extends StatefulWidget {
 class _IOSHomeState extends State<IOSHome> {
   CupertinoTabController _cupertinoTabController;
 
-  @override
-  void dispose() {
-    super.dispose();
-    _cupertinoTabController.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _cupertinoTabController.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _IOSHomeState extends State<IOSHome> {
               label: "Your Status"),
           BottomNavigationBarItem(
               icon: Icon(
-                CupertinoIcons.map_pin_ellipse,
+                FontAwesome.map_o,
               ),
               label: "Covid Map"),
           BottomNavigationBarItem(
@@ -57,7 +57,7 @@ class _IOSHomeState extends State<IOSHome> {
               label: "Covid Updates"),
           BottomNavigationBarItem(
               icon: Icon(
-                CupertinoIcons.settings,
+                Icons.settings,
               ),
               label: "Settings"),
         ],

@@ -1,19 +1,21 @@
 import 'package:covid_tracker/providers/my_location.dart';
+import 'package:covid_tracker/utils/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-class RecenterFloatingActionButton extends StatefulWidget {
-  final GoogleMapController _controller;
-  RecenterFloatingActionButton(this._controller);
+class RefetchFloatingActionButton extends StatefulWidget {
+  final GoogleMapController controller;
+  final BuildContext ctx;
+  RefetchFloatingActionButton(this.controller, this.ctx);
   @override
-  _RecenterFloatingActionButtonState createState() =>
-      _RecenterFloatingActionButtonState();
+  _RefetchFloatingActionButtonState createState() =>
+      _RefetchFloatingActionButtonState();
 }
 
-class _RecenterFloatingActionButtonState
-    extends State<RecenterFloatingActionButton>
+class _RefetchFloatingActionButtonState
+    extends State<RefetchFloatingActionButton>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   Animation curve;
@@ -52,25 +54,24 @@ class _RecenterFloatingActionButtonState
       child: ScaleTransition(
         alignment: Alignment.center,
         scale: scaleTween.animate(curve),
-        child: InkWell(
-          onTap: () async {
+        child: RawMaterialButton(
+          onPressed: () async {
             if (!_animationController.isAnimating) {
-              _myLocation.getCurrentLocation(context, widget._controller);
+              _myLocation.getCurrentLocation(widget.controller);
+              _myLocation.recenter(widget.controller);
               await _animationController.forward();
               _animationController.reset();
             }
           },
-          child: Container(
-            width: 60,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black26)]),
-            child: Image.asset(
-              'assets/globe.png',
-              alignment: Alignment.center,
-              fit: BoxFit.fill,
-            ),
+          elevation: 4.0,
+          fillColor: DarkTheme.button.withOpacity(0.8),
+          child: Icon(
+            Icons.refresh_outlined,
+            size: 30.0,
+            color: DarkTheme.green,
           ),
+          padding: EdgeInsets.all(12.0),
+          shape: CircleBorder(),
         ),
       ),
     );

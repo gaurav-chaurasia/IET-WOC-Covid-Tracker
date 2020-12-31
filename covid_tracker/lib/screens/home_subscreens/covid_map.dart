@@ -4,6 +4,7 @@ import 'package:covid_tracker/providers/covid_locations.dart';
 import 'package:covid_tracker/providers/my_location.dart';
 import 'package:covid_tracker/utils/styles.dart';
 import 'package:covid_tracker/widgets/error_refresh_button.dart';
+import 'package:covid_tracker/widgets/map_navigation_bar.dart';
 import 'package:covid_tracker/widgets/recenter_floating_action_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,12 +48,11 @@ class _CovidMapState extends State<CovidMap>
       _errorOccured = true;
       return;
     }
-    await _myLocation.getCurrentLocation(context, _controller);
+    await _myLocation.getCurrentLocation(_controller);
     initialLocation = _myLocation.initialLocation;
     _covidLocation = Provider.of<CovidLocations>(context, listen: false);
     //get all covid locations
     await _covidLocation.fetchAndSetInfectedPoints(context);
-    return;
   }
 
   void refresh() async {
@@ -68,55 +68,77 @@ class _CovidMapState extends State<CovidMap>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: DarkTheme.black,
-        appBar: CupertinoNavigationBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: DarkTheme.primary,
-            ),
-            onPressed: () {},
-          ),
-          middle: Text(
-            'Covid Tracker',
-            style: TextStyle(color: DarkTheme.primaryText),
-          ),
-        ),
-        body: _isLoading == true
-            ? Center(
-                child: CupertinoActivityIndicator(
-                  radius: 25,
-                  animating: true,
-                ),
-              )
-            : _errorOccured == true
-                ? Center(
-                    child: ErrorRefreshButton(refresh),
-                  )
-                : Consumer2<MyLocation, CovidLocations>(
-                    builder: (ctx, myLocation, covidLocation, child) {
-                      List<Marker> markers = [];
-                      //markers.addAll(myLocation.marker);
-                      markers.addAll(covidLocation.markers);
-                      Circle circle = myLocation.circle;
-                      return GoogleMap(
-                        mapType: MapType.normal,
-                        initialCameraPosition: initialLocation,
-                        markers: Set.of((markers != null) ? markers : []),
-                        circles: Set.of((circle != null) ? [circle] : []),
-                        onMapCreated: (GoogleMapController controller) {
-                          _controller = controller;
+    return Scaffold(
+      backgroundColor: DarkTheme.black,
+      resizeToAvoidBottomInset: false,
+      body: _isLoading == true
+          ? Center(
+              child: CupertinoActivityIndicator(
+                radius: 25,
+                animating: true,
+              ),
+            )
+          : _errorOccured == true
+              ? Center(
+                  child: ErrorRefreshButton(refresh),
+                )
+              : Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Consumer<CovidLocations>(
+                        builder: (ctx, covidLocation, child) {
+                          List<Marker> markers = [];
+                          List<Circle> circles = [];
+                          //markers.addAll(myLocation.marker);
+                          markers.addAll(covidLocation.markers);
+                          circles.addAll(covidLocation.circles);
+                          return GoogleMap(
+                            mapType: MapType.normal,
+                            trafficEnabled: true,
+                            buildingsEnabled: true,
+                            initialCameraPosition: initialLocation,
+                            markers: Set.of((markers != null) ? markers : []),
+                            circles: Set.of((circles != null) ? circles : []),
+                            onMapCreated: (GoogleMapController controller) {
+                              _controller = controller;
+                            },
+                            myLocationEnabled: true,
+                            myLocationButtonEnabled: false,
+                            compassEnabled: false,
+                          );
                         },
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: false,
-                      );
-                    },
-                  ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: RecenterFloatingActionButton(_controller),
-      ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      right: 10,
+                      height: 90,
+                      child: SafeArea(
+                        child: MapNavigationBar(),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 16,
+                      child: RawMaterialButton(
+                        onPressed: () async {
+                          _myLocation.recenter(_controller);
+                        },
+                        elevation: 8.0,
+                        fillColor: DarkTheme.button.withOpacity(0.8),
+                        child: Icon(
+                          Icons.my_location,
+                          size: 30.0,
+                          color: DarkTheme.primary,
+                        ),
+                        padding: EdgeInsets.all(12.0),
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: RefetchFloatingActionButton(_controller, context),
     );
   }
 
