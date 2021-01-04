@@ -6,7 +6,11 @@ class PhoneAuthWidgets {
   static Widget getLogo({String logoPath, double width}) => Material(
         type: MaterialType.transparency,
         elevation: 10.0,
-        child: Image.asset(logoPath, width: width),
+        child: Image.asset(
+          logoPath,
+          width: width,
+          cacheHeight: width.toInt(),
+        ),
       );
 }
 

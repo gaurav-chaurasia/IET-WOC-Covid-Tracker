@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:covid_tracker/providers/covid_locations.dart';
 import 'package:covid_tracker/providers/my_location.dart';
 import 'package:covid_tracker/utils/styles.dart';
@@ -22,14 +23,32 @@ class _CovidMapState extends State<CovidMap>
   CameraPosition initialLocation;
   GoogleMapController _controller;
   var _myLocation;
-  var _covidLocation;
   var _errorOccured = false;
-
+  var isInit = true;
+  var connectivityStatus = '';
+  final _connectivity = new Connectivity();
+  StreamSubscription<ConnectivityResult> _connectionSubscription;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    //init state to initialize the location data in the location provider and get all locations
+    //init state to initialize the location data in the location provider and get all locations and subscribe to the connectivity stream
+    Future.delayed(Duration.zero).then((_) => {
+          _connectionSubscription = _connectivity.onConnectivityChanged
+              .listen((ConnectivityResult result) {
+            if (result == ConnectivityResult.none) {
+              setState(() {
+                connectivityStatus = 'No internet connection';
+              });
+            } else {
+              setState(() {
+                connectivityStatus = '';
+                refresh();
+              });
+            }
+          }),
+        });
+    isInit = false;
     Future.delayed(Duration.zero).then((_) async {
       await getAllLocations();
       setState(() {
@@ -50,9 +69,6 @@ class _CovidMapState extends State<CovidMap>
     }
     await _myLocation.getCurrentLocation(_controller);
     initialLocation = _myLocation.initialLocation;
-    _covidLocation = Provider.of<CovidLocations>(context, listen: false);
-    //get all covid locations
-    await _covidLocation.fetchAndSetInfectedPoints(context);
   }
 
   void refresh() async {
@@ -71,6 +87,17 @@ class _CovidMapState extends State<CovidMap>
     return Scaffold(
       backgroundColor: DarkTheme.black,
       resizeToAvoidBottomInset: false,
+      bottomNavigationBar: AnimatedContainer(
+        height: connectivityStatus == '' ? 0 : 30,
+        color: DarkTheme.red,
+        duration: Duration(milliseconds: 300),
+        child: Center(
+          child: Text(
+            'No internet connection',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
       body: _isLoading == true
           ? Center(
               child: CupertinoActivityIndicator(
@@ -92,6 +119,7 @@ class _CovidMapState extends State<CovidMap>
                           //markers.addAll(myLocation.marker);
                           markers.addAll(covidLocation.markers);
                           circles.addAll(covidLocation.circles);
+                          covidLocation.context = context;
                           return GoogleMap(
                             mapType: MapType.normal,
                             trafficEnabled: true,
@@ -100,6 +128,8 @@ class _CovidMapState extends State<CovidMap>
                             markers: Set.of((markers != null) ? markers : []),
                             circles: Set.of((circles != null) ? circles : []),
                             onMapCreated: (GoogleMapController controller) {
+                              covidLocation.startQuery();
+                              covidLocation.mapController = controller;
                               _controller = controller;
                             },
                             myLocationEnabled: true,

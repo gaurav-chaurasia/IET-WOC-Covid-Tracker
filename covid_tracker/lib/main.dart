@@ -1,5 +1,6 @@
 import 'package:covid_tracker/providers/countries.dart';
 import 'package:covid_tracker/providers/covid_locations.dart';
+import 'package:covid_tracker/providers/health_status_provider.dart';
 import 'package:covid_tracker/providers/my_location.dart';
 import 'package:covid_tracker/providers/phone_auth.dart';
 import 'package:covid_tracker/screens/home.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => PhoneAuthDataProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => HealthStatusProvider(),
         ),
       ],
       child: Home(),

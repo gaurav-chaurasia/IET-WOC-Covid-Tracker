@@ -58,7 +58,6 @@ class _RefetchFloatingActionButtonState
           onPressed: () async {
             if (!_animationController.isAnimating) {
               _myLocation.getCurrentLocation(widget.controller);
-              _myLocation.recenter(widget.controller);
               await _animationController.forward();
               _animationController.reset();
             }

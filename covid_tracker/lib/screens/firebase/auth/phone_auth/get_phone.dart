@@ -123,7 +123,7 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
           Padding(
             padding: EdgeInsets.only(bottom: _fixedPadding),
             child:
-                PhoneAuthWidgets.getLogo(logoPath: widget.logo, width: _width),
+                PhoneAuthWidgets.getLogo(logoPath: widget.logo, width: _height/2),
           ),
 
           // AppName:

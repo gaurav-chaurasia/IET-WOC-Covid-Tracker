@@ -6,17 +6,11 @@ class Splash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: DarkTheme.background,
+      backgroundColor: DarkTheme.black,
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/loading.png',
-              width: 200,
-            ),
-            SizedBox(
-              height: 20,
-            ),
             CircularProgressIndicator(),
           ],
         ),

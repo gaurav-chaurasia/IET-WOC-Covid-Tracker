@@ -212,9 +212,10 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   signIn() {
     if (code.length != 6) {
       _showSnackBar("Invalid OTP");
+    } else {
+      Provider.of<PhoneAuthDataProvider>(context, listen: false)
+          .verifyOTPAndLogin(smsCode: code);
     }
-    Provider.of<PhoneAuthDataProvider>(context, listen: false)
-        .verifyOTPAndLogin(smsCode: code);
   }
 
   // This will return pin field - it accepts only single char
@@ -261,7 +262,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
               ),
             ),
           ),
-          maxLengthEnforcement: MaxLengthEnforcement.none,
+          maxLengthEnforced: false,
           textAlign: TextAlign.center,
           cursorColor: DarkTheme.primary,
           keyboardType: TextInputType.number,
@@ -307,8 +308,8 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
       {
         'status': 'negative',
       },
-    ).then((_) => Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (BuildContext context) => CupertinoApp(home: Home()))));
+    ).then((_) => Navigator.of(context).pushReplacement(
+        CupertinoPageRoute(builder: (BuildContext context) => Home())));
   }
 
   onFailed() {
