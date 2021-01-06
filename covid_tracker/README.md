@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+## KEY NOTES
+
+google_flutter_maps plugin works only on cocoapods less than v1.8.0 for iOS
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
