@@ -51,12 +51,15 @@ class HealthStatusProvider with ChangeNotifier {
   Future<void> fetchCoronaStatus() async {
     init();
     var userData = await firestore.collection('users').doc(phone).get();
-    var status = userData.data()['status'];
-    _covidStatus = status;
-    if (_covidStatus == true) {
-      await setCovidStream();
+    if (!userData.exists) {
+      await firestore.collection('users').doc(phone).set({'status': false});
+      _covidStatus = false;
     } else {
-      await removeCovidStream();
+      var status = userData.data()['status'];
+      _covidStatus = status;
+      if (_covidStatus == true) {
+        await setCovidStream();
+      }
     }
     //notifyListeners();
   }
@@ -70,8 +73,9 @@ class HealthStatusProvider with ChangeNotifier {
   Future<void> setCovidStream() async {
     var ref = await getReferenceToCovidLocations();
     locationSubscription = location.onLocationChanged.listen((newLocalData) {
-      addGeoPoint(newLocalData.latitude, newLocalData.longitude,
-          newLocalData.accuracy, ref);
+      if (_covidStatus == true)
+        addGeoPoint(newLocalData.latitude, newLocalData.longitude,
+            newLocalData.accuracy, ref);
     });
   }
 

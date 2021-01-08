@@ -38,6 +38,10 @@ class CovidLocations with ChangeNotifier {
     _context = ctx;
   }
 
+  set controller(GoogleMapController controller) {
+    this.mapController = controller;
+  }
+
   List<Marker> get markers {
     return [..._markers];
   }

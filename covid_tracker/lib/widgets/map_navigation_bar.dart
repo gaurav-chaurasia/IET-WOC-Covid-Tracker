@@ -15,7 +15,7 @@ class MapNavigationBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Icon(
               Icons.location_pin,
-              size: 36,
+              size: 30,
               color: DarkTheme.red,
             ),
           ),
@@ -37,7 +37,7 @@ class MapNavigationBar extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8, bottom: 2, left: 8),
             child: Icon(
               CupertinoIcons.profile_circled,
-              size: 36,
+              size: 30,
               color: DarkTheme.primary,
             ),
           ),

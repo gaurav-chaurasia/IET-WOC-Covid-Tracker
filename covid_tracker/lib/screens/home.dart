@@ -1,4 +1,5 @@
 import 'package:covid_tracker/providers/health_status_provider.dart';
+import 'package:covid_tracker/providers/settings_provider.dart';
 import 'package:covid_tracker/screens/firebase/auth/phone_auth/get_phone.dart';
 import 'package:covid_tracker/screens/firebase/auth/phone_auth/select_country.dart';
 import 'package:covid_tracker/screens/firebase/auth/phone_auth/verify.dart';
@@ -20,8 +21,7 @@ class Home extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> loadData(BuildContext context) async {
-    await Provider.of<HealthStatusProvider>(context, listen: false)
-        .fetchCoronaStatus();
+    await Provider.of<SettingsProvider>(context, listen: false).fetchMapType();
   }
 
   Widget splashScreen() {
@@ -50,6 +50,8 @@ class Home extends StatelessWidget {
                     primaryColor: DarkTheme.primary,
                     barBackgroundColor: DarkTheme.appBar,
                     scaffoldBackgroundColor: DarkTheme.black,
+                    textTheme: CupertinoTextThemeData(
+                        primaryColor: DarkTheme.primaryText),
                   ),
                   home: IOSHome(),
                   debugShowCheckedModeBanner: false,

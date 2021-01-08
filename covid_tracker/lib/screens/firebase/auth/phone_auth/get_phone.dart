@@ -111,7 +111,7 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
            * (Previously there was a FutureBuilder rather that the below thing, which created unexpected exceptions and had to be removed)
            */
           child: countriesProvider.countries.length > 0
-              ? _getColumnBody(countriesProvider)
+              ? Center(child: _getColumnBody(countriesProvider))
               : Center(child: CircularProgressIndicator()),
         ),
       );
@@ -122,8 +122,8 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
           //  Logo: scaling to occupy 2 parts of 10 in the whole height of device
           Padding(
             padding: EdgeInsets.only(bottom: _fixedPadding),
-            child:
-                PhoneAuthWidgets.getLogo(logoPath: widget.logo, width: _height/2),
+            child: PhoneAuthWidgets.getLogo(
+                logoPath: widget.logo, width: _height / 2.5),
           ),
 
           // AppName:
