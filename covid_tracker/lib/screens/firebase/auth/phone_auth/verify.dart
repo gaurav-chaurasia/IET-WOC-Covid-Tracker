@@ -302,14 +302,8 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   onVerified() async {
     _showSnackBar(
         "${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
-    final String phone =
-        await Provider.of<PhoneAuthDataProvider>(context, listen: false).phone;
-    await FirebaseFirestore.instance.collection('users').doc(phone).set(
-      {
-        'status': 'negative',
-      },
-    ).then((_) => Navigator.of(context).pushReplacement(
-        CupertinoPageRoute(builder: (BuildContext context) => Home())));
+    Navigator.of(context).pushReplacement(
+        CupertinoPageRoute(builder: (BuildContext context) => Home()));
   }
 
   onFailed() {

@@ -48,8 +48,8 @@ class MyLocation with ChangeNotifier {
   void recenter(GoogleMapController controller) {
     _initialLocation = new CameraPosition(
         target: _initialLocation.target,
-        zoom: 17.60,
-        tilt: 30,
+        zoom: 17,
+        tilt: 37,
         bearing: 192.8334901395799);
     if (controller != null) {
       controller.animateCamera(
@@ -75,15 +75,15 @@ class MyLocation with ChangeNotifier {
                     bearing: 192.8334901395799,
                     target:
                         LatLng(newLocalData.latitude, newLocalData.longitude),
-                    tilt: 30,
-                    zoom: 17.60),
+                    tilt: 37,
+                    zoom: 17),
               ),
             );
             _initialLocation = new CameraPosition(
                 bearing: 192.8334901395799,
                 target: LatLng(newLocalData.latitude, newLocalData.longitude),
-                tilt: 30,
-                zoom: 17.60);
+                tilt: 37,
+                zoom: 17);
           }
         },
       );

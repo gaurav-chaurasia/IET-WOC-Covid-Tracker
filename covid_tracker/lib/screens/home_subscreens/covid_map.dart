@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:covid_tracker/providers/covid_locations.dart';
+import 'package:covid_tracker/providers/health_status_provider.dart';
 import 'package:covid_tracker/providers/my_location.dart';
+import 'package:covid_tracker/providers/settings_provider.dart';
 import 'package:covid_tracker/utils/styles.dart';
 import 'package:covid_tracker/widgets/error_refresh_button.dart';
 import 'package:covid_tracker/widgets/map_navigation_bar.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class CovidMap extends StatefulWidget {
   @override
@@ -24,14 +27,18 @@ class _CovidMapState extends State<CovidMap>
   GoogleMapController _controller;
   var _myLocation;
   var _errorOccured = false;
-  var isInit = true;
   var connectivityStatus = '';
   final _connectivity = new Connectivity();
   StreamSubscription<ConnectivityResult> _connectionSubscription;
+  String _mapStyle;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    rootBundle.loadString('assets/map_styles.txt').then((string) {
+      _mapStyle = string;
+    });
     //init state to initialize the location data in the location provider and get all locations and subscribe to the connectivity stream
     Future.delayed(Duration.zero).then((_) => {
           _connectionSubscription = _connectivity.onConnectivityChanged
@@ -43,12 +50,11 @@ class _CovidMapState extends State<CovidMap>
             } else {
               setState(() {
                 connectivityStatus = '';
-                refresh();
               });
+              refresh();
             }
           }),
         });
-    isInit = false;
     Future.delayed(Duration.zero).then((_) async {
       await getAllLocations();
       setState(() {
@@ -69,6 +75,8 @@ class _CovidMapState extends State<CovidMap>
     }
     await _myLocation.getCurrentLocation(_controller);
     initialLocation = _myLocation.initialLocation;
+    await Provider.of<HealthStatusProvider>(context, listen: false)
+        .fetchCoronaStatus();
   }
 
   void refresh() async {
@@ -83,12 +91,18 @@ class _CovidMapState extends State<CovidMap>
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: DarkTheme.black,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: AnimatedContainer(
-        height: connectivityStatus == '' ? 0 : 30,
+        height: connectivityStatus == '' ? 0 : 26,
         color: DarkTheme.red,
         duration: Duration(milliseconds: 300),
         child: Center(
@@ -112,25 +126,33 @@ class _CovidMapState extends State<CovidMap>
               : Stack(
                   children: [
                     Positioned.fill(
-                      child: Consumer<CovidLocations>(
-                        builder: (ctx, covidLocation, child) {
+                      child: Consumer2<CovidLocations, SettingsProvider>(
+                        builder: (ctx, covidLocation, settings, child) {
                           List<Marker> markers = [];
                           List<Circle> circles = [];
                           //markers.addAll(myLocation.marker);
                           markers.addAll(covidLocation.markers);
                           circles.addAll(covidLocation.circles);
                           covidLocation.context = context;
+                          var settingsData = settings.mapType;
+                          MapType mapType;
+                          settingsData == 'normal'
+                              ? mapType = MapType.normal
+                              : settingsData == 'hybrid'
+                                  ? mapType = MapType.hybrid
+                                  : mapType = MapType.satellite;
                           return GoogleMap(
-                            mapType: MapType.normal,
+                            mapType: mapType,
                             trafficEnabled: true,
                             buildingsEnabled: true,
                             initialCameraPosition: initialLocation,
                             markers: Set.of((markers != null) ? markers : []),
                             circles: Set.of((circles != null) ? circles : []),
                             onMapCreated: (GoogleMapController controller) {
-                              covidLocation.startQuery();
-                              covidLocation.mapController = controller;
                               _controller = controller;
+                              _controller.setMapStyle(_mapStyle);
+                              covidLocation.startQuery();
+                              covidLocation.controller = controller;
                             },
                             myLocationEnabled: true,
                             myLocationButtonEnabled: false,
@@ -155,7 +177,7 @@ class _CovidMapState extends State<CovidMap>
                           _myLocation.recenter(_controller);
                         },
                         elevation: 8.0,
-                        fillColor: DarkTheme.button.withOpacity(0.8),
+                        fillColor: DarkTheme.button.withOpacity(0.9),
                         child: Icon(
                           Icons.my_location,
                           size: 30.0,

@@ -3,6 +3,7 @@ import 'package:covid_tracker/providers/covid_locations.dart';
 import 'package:covid_tracker/providers/health_status_provider.dart';
 import 'package:covid_tracker/providers/my_location.dart';
 import 'package:covid_tracker/providers/phone_auth.dart';
+import 'package:covid_tracker/providers/settings_provider.dart';
 import 'package:covid_tracker/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => HealthStatusProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SettingsProvider(),
         ),
       ],
       child: Home(),

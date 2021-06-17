@@ -8,26 +8,38 @@ class CovidUpdates extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: DarkTheme.black,
-        appBar: CupertinoNavigationBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: DarkTheme.primary,
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                children: [
+                  Text(
+                    'Covid Updates',
+                    style: TextStyle(
+                        color: DarkTheme.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
             ),
-            onPressed: () {},
-          ),
-          middle: Text(
-            'Covid Updates',
-            style: TextStyle(color: DarkTheme.primaryText),
-          ),
-        ),
-        body: Container(
-          child: Center(
-            child: Text(
-              'COVID UPDATES',
-              style: TextStyle(color: DarkTheme.primaryText),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Get the latest covid news and updates',
+                      style: TextStyle(
+                        color: DarkTheme.primaryText,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

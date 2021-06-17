@@ -63,7 +63,7 @@ class _RefetchFloatingActionButtonState
             }
           },
           elevation: 4.0,
-          fillColor: DarkTheme.button.withOpacity(0.8),
+          fillColor: DarkTheme.button.withOpacity(0.9),
           child: Icon(
             Icons.refresh_outlined,
             size: 30.0,
